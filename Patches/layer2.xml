@@ -1,0 +1,615 @@
+<?xml version="1.0" encoding="utf-8" ?>
+
+<EternityPatchFile name="Layer2" >	
+
+	<Patch name="PatchMRCWI" type="hook" search_start="0x11D6DF0" comment="signature 1.19" >
+		<Instruction code="80 FA FF" comment="cmp dl, FFh" />
+		<Instruction code="0F 84 XXXXXXXX" comment="jz return" />
+		<Instruction code="48 8B C4" comment="mov rax, rsp" />
+		<Instruction code="88 50 10" comment="mod [rax+10], dl" />
+		<Instruction code="55 56 57 41 54 41 55 41 56 41 57" comment="push rbp,rsi,rdi,r12-r15" />
+		<Instruction code="48 8D 6C 24 80" comment="lea rbp, [rsp-80h]" />
+		<Instruction code="48 81 EC 80 01 00 00" comment="sub rsp, 180h" />
+		
+		<Hook value="model_request_character_with_id_patched"  setup="SetupMRCWI"/>
+	</Patch>	
+
+	<Patch name="PatchBGC" type="hook" search_start="0x170F84B" comment="signature 1.04a" >
+		<Instruction code="48 81 C1 XX XX 00 00" comment="add rcx, 0000XXXXh" />
+		<Instruction code="44 8B CE" comment="mov r9d, esi" />
+		<Instruction code="BA 89 BE 72 22" comment="mov edx, 2272BE89h" />
+		<Instruction code="41 B8 4D 58 08 58" comment="mov r8d, 5808584Dh" />
+		<Instruction code="E8 XXXXXXXX" comment="call XXXXXXXX" />
+		
+		<Hook type="call" inst_index="4" value="get_battle_costume_patched" setup="SetupVGH" />		
+	</Patch>
+	
+	<Patch name="PatchBGF" type="hook" search_start="0x170F87A" comment="signature 1.04a" >
+		<Instruction code="48 81 C1 XX XX 00 00" comment="add rcx, 0000XXXXh" />
+		<Instruction code="44 8B CE" comment="mov r9d, esi" />
+		<Instruction code="BA 89 BE 72 22" comment="mov edx, 2272BE89h" />
+		<Instruction code="41 B8 10 07 48 5A" comment="mov r8d, 5A480710h" />
+		<Instruction code="E8 XXXXXXXX" comment="call XXXXXXXX" />
+		
+		<Hook type="call" inst_index="4" value="get_battle_face_patched" />		
+	</Patch>
+	
+	<Patch name="PatchBGH" type="hook" search_start="0x170F8AC" comment="signature 1.04a" >
+		<Instruction code="48 81 C1 XX XX 00 00" comment="add rcx, 0000XXXXh" />
+		<Instruction code="44 8B CE" comment="mov r9d, esi" />
+		<Instruction code="BA 89 BE 72 22" comment="mov edx, 2272BE89h" />
+		<Instruction code="41 B8 15 F3 01 5B" comment="mov r8d, 5B01F315h" />
+		<Instruction code="E8 XXXXXXXX" comment="call XXXXXXXX" />
+		
+		<Hook type="call" inst_index="4" value="get_battle_hair_patched" />		
+	</Patch>
+	
+	<Patch name="PatchGRCF" type="hook" search_start="0x183BD3D" comment="signature 1.16" >
+		<Instruction code="48 81 C1 XX XX 00 00" comment="add rcx, 0000XXXXh" />
+		<Instruction code="44 8B CE" comment="mov r9d, esi" />
+		<Instruction code="BA 89 BE 72 22" comment="mov edx, 2272BE89h" />
+		<Instruction code="41 B8 82 1B DD 1D" comment="mov r8d, 1DDD1B82h" />
+		<Instruction code="E8 XXXXXXXX" comment="call XXXXXXXX" />
+		
+		<Hook type="call" inst_index="4" value="get_random_character_flag_patched" setup="SetupVGB" />			
+	</Patch>
+	
+	<Patch name="PatchBGS" type="hook" search_start="0x178BD87" comment="signature 1.06a" >
+		<Instruction code="48 81 C1 XX XX 00 00" comment="add rcx, 0000XXXXh" />
+		<Instruction code="45 33 C9" comment="xor r9d, r9d" />
+		<Instruction code="BA 89 BE 72 22" comment="mov edx, 2272BE89h" />
+		<Instruction code="41 B8 6F 7B F1 EE" comment="mov r8d, 0EEF17B6Fh" />
+		<Instruction code="E8 XXXXXXXX" comment="call XXXXXXXX" />
+		
+		<Hook type="call" inst_index="4" value="get_battle_stage_patched" />		
+	</Patch>
+	
+	<Patch name="PatchLPA" type="hook" search_start="0x102BAE4" comment="signature 1.03b" >
+		<Instruction code="57" comment="push rdi" />
+		<Instruction code="48 83 EC 40" comment="sub rsp, 40h" />
+		<Instruction code="48 C7 44 24 20 FE FF FF FF" comment="mov qword ptr[rsp+20h], -2" />
+		<Instruction code="48 89 5C 24 58" comment="mov [rsp+58h], rbx" />
+		<Instruction code="48 89 6C 24 60" comment="mov [rsp+60h], rbp" />
+		<Instruction code="48 89 74 24 68" comment="mov [rsp+68h], rsi" />
+		<Instruction code="41 8B D9" comment="mov rbx, r9d" />
+		<Instruction code="4D 8B D8" comment="mov r11, r8" />
+		<Instruction code="8B F2" comment="mov esi, edx" />
+		<Instruction code="48 8B E9" comment="mov rbp, rcx" />
+		<Instruction code="48 8B 81 80 00 00 00" comment="mov rax, [rcx+80h]" />
+		
+		<Hook value="layout_play_anime_patched" setup="SetupLPA" />
+	</Patch>
+	
+	<Patch name="LocateMO" type="notify" search_start="0x16DF36E" comment="signature 1.03b" >	
+		<Instruction code="49 83 F9 02" comment="cmp r9, 2" />
+		<Instruction code="73 1B" comment="jnb +1B" />
+		<Instruction code="48 8B 15 XXXXXXXX" comment="mov rdx, XXXXXXXX" />
+		<Instruction code="48 6B C8 38" comment="imul rcx, rax, 38h" />
+		
+		<Notify inst_index="2" inst_offset="3" value="OnMOLocated" />	
+	</Patch>
+	
+	<Patch name="PatchICM" type="hook" search_start="0x11D59D0" comment="signature 1.19" >	
+		<Instruction code="40 53" comment="push rbx" />
+		<Instruction code="48 83 EC 20" comment="sub rsp, 20h" />
+		<Instruction code="80 79 0C 00" comment="cmp byte ptr [rcx+0Ch], 0" />
+		<Instruction code="48 8B D9" comment="mov rbx, rcx" />
+		<Instruction code="75 XX" comment="jnz return_0" />
+		<Instruction code="39 51 10" comment="cmp [rcx+10h], edx" />
+		<Instruction code="75 XX" comment="jnz return_0" />
+		<Instruction code="44 39 41 18" comment="cmp [rcx+18h], r8d" />
+		<Instruction code="75 XX" comment="jnz return_0" />
+		
+		<Hook value="is_cached_model_patched" setup="SetupICM" />	
+	</Patch>
+	
+	<!-- These two have same signature as above, because there are three IDENTICAL consecutive functions, and I want to hook all of them -->
+	<Patch name="PatchICM2" type="hook" search_start="0x11D59D0" comment="signature 1.19" >	
+		<Instruction code="40 53" comment="push rbx" />
+		<Instruction code="48 83 EC 20" comment="sub rsp, 20h" />
+		<Instruction code="80 79 0C 00" comment="cmp byte ptr [rcx+0Ch], 0" />
+		<Instruction code="48 8B D9" comment="mov rbx, rcx" />
+		<Instruction code="75 XX" comment="jnz return_0" />
+		<Instruction code="39 51 10" comment="cmp [rcx+10h], edx" />
+		<Instruction code="75 XX" comment="jnz return_0" />
+		<Instruction code="44 39 41 18" comment="cmp [rcx+18h], r8d" />
+		<Instruction code="75 XX" comment="jnz return_0" />
+		
+		<Hook value="is_cached_model_patched" />	
+	</Patch>
+	
+	<Patch name="PatchICM3" type="hook" search_start="0x11D59D0" comment="signature 1.19" >	
+		<Instruction code="40 53" comment="push rbx" />
+		<Instruction code="48 83 EC 20" comment="sub rsp, 20h" />
+		<Instruction code="80 79 0C 00" comment="cmp byte ptr [rcx+0Ch], 0" />
+		<Instruction code="48 8B D9" comment="mov rbx, rcx" />
+		<Instruction code="75 XX" comment="jnz return_0" />
+		<Instruction code="39 51 10" comment="cmp [rcx+10h], edx" />
+		<Instruction code="75 XX" comment="jnz return_0" />
+		<Instruction code="44 39 41 18" comment="cmp [rcx+18h], r8d" />
+		<Instruction code="75 XX" comment="jnz return_0" />
+		
+		<Hook value="is_cached_model_patched" setup="SetupICM" />	
+	</Patch>
+	
+	
+	<Patch name="PatchICF" type="hook" search_start="0x11332F0" comment="signature 1.05" >
+		<Instruction code="4C 89 44 24 18" comment="mov [rsp+18h], r8" />
+		<Instruction code="4C 89 4C 24 20" comment="mov [rsp+20h], r9" />
+		<Instruction code="80 79 0C 00" comment="cmp byte ptr [rcx+0Ch], 0" />
+		<Instruction code="75 08" comment="jne +8" />
+		<Instruction code="39 51 10" comment="mov [rcx+10h], edx" />
+		
+		<Hook value="is_cached_face_patched" setup="SetupICF" />		
+	</Patch> 
+	
+	<Patch name="LocateGDS" type="notify" search_start="0x131BE9" comment="signature 1.03b" >
+	
+		<Instruction code="4C 8D 44 24 20" comment="lea r8, [rsp+20h]" />
+		<Instruction code="BA 00 01 00 00" comment="mov edx, 0100h" />
+		<Instruction code="48 8B 01" comment="mov rax, [rcx]" />
+		<Instruction code="FF 50 48" comment="call qword ptr [rax+48h]" />
+		
+		<!-- inst_index=2 is not an error -->
+		<Notify inst_index="2" value="OnPatchCK" />	
+	</Patch>
+	
+	<Patch name="PatchBI" type="hook" search_start="0x18462C0" comment="signature 1.15" >
+		<Instruction code="48 83 EC 68" comment="sub rsp, 68h" />
+		<Instruction code="48 C7 44 24 28 FE FF FF FF" comment="mov qword ptr [rsp+28h], -2" />
+		<Instruction code="48 8B 05 XXXXXXXX" comment="mov rax, XXXXXXXX" />
+		<Instruction code="48 33 C4" comment="xor rax, rsp" />
+		<Instruction code="48 89 44 24 58" comment="mov [rsp+58h], rax" />
+		<Instruction code="48 8B 15 XXXXXXXX" comment="mov rdx, XXXXXXXX" />
+		<Instruction code="8B 42 70" comment="mov eax, [rdx+70h]" />
+		
+		<Hook value="battle_initialize_patched" setup="SetupBI" />	
+	</Patch>
+	
+	<Patch name="PatchBF" type="hook" search_start="0x10C7A60" comment="signature 1.03b" >
+		<Instruction code="48 8B C4" comment="mov rax, rsp" />
+		<Instruction code="55 57 41 56" comment="push rbp,rdi,r14" />
+		<Instruction code="48 8D 68 A1" comment="lea rbp, [rax-5Fh]" />
+		<Instruction code="48 81 EC 90 00 00 00" comment="sub rsp, 90h" />
+		<Instruction code="48 C7 45 0F FE FF FF FF" comment="mov qword ptr [rbp+0Fh], -2" />
+		<Instruction code="48 89 58 10" comment="mov [rax+10h], rbx" />
+		<Instruction code="48 89 70 18" comment="mov [rax+18h], rsi" />
+		
+		<Hook value="battle_finalize_patched" setup="SetupBF" />	
+	</Patch>
+	
+	<Patch name="PatchBNM" type="hook" search_start="0x1234060" comment="signature 1.03b" >
+		<Instruction code="48 83 EC 68" comment="sub rsp, 68h" />
+		<Instruction code="48 8B 05 XXXXXXXX" comment="mov rax, XXXXXXXX" />
+		<Instruction code="48 33 C4" comment="xor rax, rsp" />
+		<Instruction code="48 89 44 24 50" comment="mov [rsp+50h], rax" />
+		<Instruction code="33 C0" comment="xor eax, eax" />
+		<Instruction code="4C 8D 91 XXXXXXXX" comment="lea r10, [rcx+XXXXXXXX]" />
+		
+		<Hook value="battle_next_match_patched" setup="SetupBNM" />	
+	</Patch>
+	
+	<Patch name="PatchBRM" type="hook" search_start="0x12340D0" comment="signature 1.03b" >
+		<Instruction code="48 89 5C 24 10" comment="mov [rsp+10h], rbx" />
+		<Instruction code="57" comment="push rdi" />
+		<Instruction code="48 83 EC 60" comment="sub rsp, 60h" />
+		<Instruction code="48 8B 05 XXXXXXXX" comment="mov rax, XXXXXXXX" />
+		<Instruction code="48 33 C4" comment="xor rax, rsp" />
+		<Instruction code="48 89 44 24 50" comment="mov [rsp+50h], rax" />
+		<Instruction code="FF 81 XXXXXXXX" comment="inc dword ptr [rcx+XXXXXXXX]" />
+		
+		<Hook value="battle_rematch_patched" setup="SetupBRM" />	
+	</Patch>
+	
+	<Patch name="PatchSRARTA" type="hook" search_start="0x18B0DF6" comment="signature 1.19" >
+		<Instruction code="88 44 24 20" comment="mov byte ptr[rsp+20h], al" />
+		<Instruction code="44 0F B6 CB" comment="movzx r9d, bl" />
+		<Instruction code="4C 8B 42 08" comment="mov r8, [rdx+8]" />
+		<Instruction code="48 8D 54 24 40" comment="lea rdx, [rsp+40h]" />
+		<Instruction code="49 8B 8B 38 01 00 00" comment="mov rcx, [r11+138h]" />
+		<Instruction code="E8 XXXXXXXX" comment="call select_randomness" />
+		
+		<Hook type="call" inst_index="5" value="select_randomness_arcade_ta" setup="SetupSR" />
+	</Patch>
+	
+	<Patch name="PatchSRSV" type="hook" search_start="0x18B3D8C" comment="signature 1.20" >
+		<Instruction code="0F B6 44 31 7A" comment="movzx eax, byte ptr [rcx+rsi+7Ah]" />
+		<Instruction code="88 44 24 20" comment="mov byte ptr[rsp+20h], al" />
+		<Instruction code="44 0F B6 CB" comment="movzx, r9d, bl" />
+		<Instruction code="4C 8B 42 08" comment="mov r8, [rdx+8]" />
+		<Instruction code="48 8D 54 24 40" comment="lea rdx, [rsp+40h]" />
+		<Instruction code="49 8B 8B 40 01 00 00"comment="mov rcx, [r11+140h]"  />
+		<Instruction code="E8 XXXXXXXX" comment="call select_randomness" />
+		
+		<Hook type="call" inst_index="6" value="select_randomness_survival" />
+	</Patch>
+	
+	<Patch name="PatchSRVS" type="hook" search_start="0x18C45A1" comment="signature 1.19" >
+		<Instruction code="C6 44 24 28 01" comment="mov byte ptr[rsp+28h], 1" />
+		<Instruction code="42 0F B6 44 30 7A" comment="movzx eax, byte ptr [rax+r14+7Ah]" />
+		<Instruction code="88 44 24 20" comment="mov byte ptr[rsp+20h], al" />
+		<Instruction code="44 0F B6 CB" comment="movzx r9d, bl" />
+		<Instruction code="4C 8B 41 08" comment="mov r8, [rcx+8]" />
+		<Instruction code="48 8D 54 24 40" comment="lea rdx, [rsp+40h]" />
+		<Instruction code="49 8B 8B D0 00 00 00" comment="mov rcx, [r11+0D0h]" />
+		<Instruction code="E8 XXXXXXXX" comment="call select_randomness" />
+		
+		<Hook type="call" inst_index="7" value="select_randomness_versus" /> 
+	</Patch>
+	
+	<Patch name="PatchSRFT" type="hook" search_start="0x18C86B5" comment="signature 1.21" >
+		<Instruction code="42 0F B6 44 30 7A" comment="movzx eax, byte ptr [rax+r14+7Ah]" />
+		<Instruction code="88 44 24 20" comment="mov byte ptr[rsp+20h], al" />
+		<Instruction code="44 0F B6 CB" comment="movzx r9d, bl" />
+		<Instruction code="4C 8B 41 08" comment="mov r8, [rcx+8]" />
+		<Instruction code="48 8D 54 24 40" comment="lea rdx, [rsp+40h]" />
+		<Instruction code="49 8B 8B A0 00 00 00" comment="mov rcx, [r11+0A0h]" />
+		<Instruction code="E8 XXXXXXXX" comment="call select_randomness" />
+		
+		<Hook type="call" inst_index="6" value="select_randomness_ft" /> 
+	</Patch>
+	
+	<Patch name="PatchSRSARTA" type="hook" search_start="0x18B10BD" comment="signature 1.20" >
+		<Instruction code="4B 8D 1C 91" comment="lea rbx, [r9+r10*4]" />
+		<Instruction code="41 B1 01" comment="mov r9b, 1" />
+		<Instruction code="45 0F B6 43 71" comment="mov r8d, byte ptr [r11+71h]" />
+		<Instruction code="49 8B 57 08" comment="mov rdx, [r15+8]" />		
+		<Instruction code="48 8B 45 67" comment="mov rax, [rbp+67h]" />
+		<Instruction code="48 8B 88 38 01 00 00" comment="mod rcx, [rax+138h]" />
+		<Instruction code="E8 XXXXXXXX" comment="call select_randomness_stage" />
+		
+		<Hook type="call" inst_index="6" value="select_randomness_stage_arcade_ta" setup="SetupSRS" />
+	</Patch>
+	
+	<Patch name="PatchSRSVS" type="hook" search_start="0x18C48BA" comment="signature 1.20" >
+		<Instruction code="4B 8D 1C 91" comment="lea rbx, [r9+r10*4]" />
+		<Instruction code="45 33 C9" comment="xor r9d, r9d" />
+		<Instruction code="45 0F B6 43 71" comment="movzx r8d, byte ptr [r11+71h]" />
+		<Instruction code="49 8B 57 08" comment="mov rdx, [r15+8]" />
+		<Instruction code="48 8B 45 67" comment="mov rax, [rbp+67h]" />
+		<Instruction code="48 8B 88 D0 00 00 00" comment="mov rcx, [rax+0D0h]" />
+		<Instruction code="E8 XXXXXXXX" comment="call select_randomness_stage" />
+		
+		<Hook type="call" inst_index="6" value="select_randomness_stage_versus" />
+	</Patch>
+	
+	<Patch name="PatchSRFTS" type="hook" search_start="0x18C8237" comment="signature 1.21" >
+		<Instruction code="4B 8D 1C 91" comment="lea rbx, [r9+r10*4]" />
+		<Instruction code="45 33 C9" comment="xor r9d, r9d" />
+		<Instruction code="45 0F B6 43 71" comment="movzx r8d, byte ptr [r11+71h]" />
+		<Instruction code="49 8B 57 08" comment="mov rdx, [r15+8]" />
+		<Instruction code="48 8B 45 67" comment="mov rax, [rbp+67h]" />
+		<Instruction code="48 8B 88 A0 00 00 00" comment="mov rcx, [rax+0A0h]" />
+		<Instruction code="E8 XXXXXXXX" comment="call select_randomness_stage" />
+		
+		<Hook type="call" inst_index="6" value="select_randomness_stage_ft" />
+	</Patch>
+	
+	<!-- Note: two matches for the signature, but any of them will resove the CO singleton -->
+	<Patch name="LocateCO" type="notify" search_start="0x11298B5" comment="signature 1.16" >
+		<Instruction code="48 8B 05 XXXXXXXX" comment="mov rax, CO" />
+		<Instruction code="48 8B 94 C8 68 03 00 00" comment="mov rdx, [rax+rcx*8+368h]" />
+		<Instruction code="48 2B 94 C8 60 03 00 00" comment="sub rdx, [rax+rcx*8+360h]" />
+		
+		<Notify inst_index="0" inst_offset="3" value="OnCOLocated"/>
+	</Patch>
+	
+	<Patch name="LocateCISL" type="notify" search_start="0x11F9FC0" comment="signature 1.14" >
+		<Instruction code="48 8B C4" comment="mov rax, rsp" />
+		<Instruction code="57 41 54 41 55 41 56 41 57" comment="push rdi, r12-r15" />
+		<Instruction code="48 83 EC 50" comment="sub rsp, 50h" />
+		<Instruction code="48 C7 40 A8 FE FF FF FF" comment="mov qword ptr [rax-58h], -2" />
+		<Instruction code="48 89 58 08" comment="mov [rax+8], rbx" />
+		<Instruction code="48 89 68 10" comment="mov [rax+10h], rbp" />
+		<Instruction code="48 89 70 18"comment="mov [rax+18h], rsi"  />
+		<Instruction code="8B FA" comment="mov edi, edx" />
+		
+		<Notify value="OnCISLLocated" />
+	</Patch>
+	
+	<Patch name="LocateCRDSL" type="notify" search_start="0x1132540" comment="signature 1.04a" >
+		<Instruction code="40 57" comment="push rdi" />
+		<Instruction code="48 83 EC 40" comment="sub rsp, 40h" />
+		<Instruction code="48 C7 44 24 20 FE FF FF FF" comment="mov qword ptr [rsp+20h], -2" />
+		<Instruction code="48 89 5C 24 50" comment="mov [rsp+50h], rbx" />
+		<Instruction code="48 89 74 24 58" comment="mov [rsp+58h], rsi" />
+		<Instruction code="0F B6 FA" comment="movzx edi, dl" />
+		<Instruction code="48 8B D9"comment="mov rbx, rcx"  />
+		<Instruction code="0F 57 C0" comment="xorps xmm0, xmm0" />
+		
+		<Notify value="OnCRDSLLocated" />
+	</Patch>
+	
+	<Patch name="LocateCGDHLIH_NNN" type="notify" search_start="0x11FEFE0" comment="signature 1.16" >
+		<Instruction code="48 83 EC 28" comment="sub rsp, 28h" />
+		<Instruction code="0F B6 C2" comment="movzx eax, dl" />
+		<Instruction code="4C 8B C9" comment="mov r9, rcx" />		
+		<Instruction code="48 83 F8 02" comment="cmp rax, 2" />
+		<Instruction code="73 1B" comment="jnb exception" />
+		<Instruction code="48 8D 04 40" comment="lea rax, [rax+rax*2]" />
+		<Instruction code="41 8B C8"comment="mov ecx, r8d"  />
+		<Instruction code="49 8B 84 C1 60 03 00 00" comment="mov rax, [r9+rax*8+360h]" />
+		
+		<Notify value="OnCGDHLIH_NNN_Located" />
+	</Patch>
+	
+	<Patch name="LocateCGDHLS_NNN" type="notify" search_start="0x11FF160" comment="signature 1.16" >
+		<Instruction code="48 83 EC 28" comment="sub rsp, 28h" />
+		<Instruction code="0F B6 C2" comment="movzx eax, dl" />
+		<Instruction code="4C 8B C1" comment="mov r8, rcx" />		
+		<Instruction code="48 83 F8 02" comment="cmp rax, 2" />
+		<Instruction code="73 1F" comment="jnb exception" />
+		<Instruction code="48 8D 04 40" comment="lea rax, [rax+rax*2]" />
+		<Instruction code="48 8B 8C C1 68 03 00 00"comment="mov rcx, [rcx+rax*8+368h]"  />
+		
+		<Notify value="OnCGDHLS_NNN_Located" />
+	</Patch>
+	
+	<Patch name="LocateOGCRFC" type="notify" search_start="0x1729F40" comment="signature 1.04a" >
+		<Instruction code="48 8B C4" comment="mov rax, rsp" />
+		<Instruction code="56 57 41 54 41 56 41 57" comment="push rsi, rdi, r12, r14, r15" />
+		<Instruction code="48 83 EC 40" comment="sub rsp, 40h" />
+		<Instruction code="48 C7 40 B8 FE FF FF FF" comment="mov qword ptr [rax-48h], -2" />
+		<Instruction code="48 89 58 18" comment="mov [rax+18h], rbx" />
+		<Instruction code="48 89 68 20" comment="mov [rax+20h], rbp" />
+		<Instruction code="33 ED" comment="xor ebp, ebp" />
+		
+		<Notify value="OnOGCRFCLocated" />
+	</Patch>
+	
+	<Patch name="LocateCGDFM" type="notify" search_start="0x1723930" comment="signature 1.04a" >
+		<Instruction code="48 89 5C 24 08" comment="mov [rsp+8], rbx" />
+		<Instruction code="48 89 6C 24 10" comment="mov [rsp+10h], rbp" />
+		<Instruction code="48 89 74 24 18" comment="mov [rsp+18h], rsi" />
+		<Instruction code="57 41 56 41 57" comment="push rdi, r14, r15" />
+		<Instruction code="48 83 EC 20" comment="sub rsp, 20h" />
+		<Instruction code="8B E9" comment="mov ebp, ecx" />
+		<Instruction code="4D 63 F8" comment="movsxd r15, r8d" />
+		
+		<Notify value="OnCGDFMLocated" />
+	</Patch>
+	
+	<Patch name="LocateLSPTU" type="notify" search_start="0xFFCDE0" comment="signature 1.05" >
+		<Instruction code="40 55 53 56 57 41 54 41 56 41 57" comment="push rbp, rbx, rso, rdi, r12, r14, r15" />
+		<Instruction code="48 8D 6C 24 E9" comment="lea rbp, [rsp-17h]" />
+		<Instruction code="48 81 EC E0 00 00 00" comment="sub rsp, E0h" />
+		<Instruction code="48 C7 44 24 20 FE FF FF FF" comment="mov qword ptr[rsp+20h], -2" />
+		
+		<Notify value="OnLSPTULocated" />
+	</Patch>
+	
+	<Patch name="LocateLO" type="notify" search_start="0x114F1A3" comment="signature 1.05" >
+		<Instruction code="89 44 24 20" comment="mov [rsp+20h], eax" />
+		<Instruction code="44 8B CE" comment="mov r9d, esi" />
+		<Instruction code="45 8B C6" comment="mov r8d, r14d" />
+		<Instruction code="48 8B 0D XXXXXXXX" comment="mov rcx, XXXXXXXX" />
+		
+		<Notify value="OnLOLocated" inst_index="3" inst_offset="3" />
+	</Patch>
+	
+	<Patch name="PatchLSPTII" type="hook" search_start="0x178A8B0" comment="signature 1.06a" >
+		<Instruction code="4C 8B DC" comment="mov r11, rsp" />
+		<Instruction code="53 56 57" comment="push rbx, rsi, rdi" />
+		<Instruction code="48 83 EC 60" comment="sub rsp, 60h" />
+		<Instruction code="49 C7 43 B8 FE FF FF FF" comment="mov qword ptr [r11-48h], -2" />
+		<Instruction code="48 8B 05 XXXXXXXX" comment="mov rax, XXXXXXXX" />
+		<Instruction code="48 33 C4" comment="xor rax, rsp" />
+		<Instruction code="48 89 44 24 58" comment="mov [rsp+58], rax" />
+		<Instruction code="41 8B F1" comment="mov esi, r9d" />
+		<Instruction code="41 8B F8" comment="mov edi, r8d" />
+		<Instruction code="8B DA" comment="mov ebx, edx" />
+		<Instruction code="48 8B 94 24 A0 00 00 00" comment="mov rdx, [rsp+A0]" />
+		<Instruction code="4D 8D 4B 38" comment="lea r9, [r11+38h]" />
+		
+		<Hook value="layout_set_pane_texture_ii_patched" setup="SetupLSPTII" />
+	</Patch>
+	
+	<Patch name="LoadStagesExt" type="hook" search_start="0x18487B0" comment="signature 1.08" >
+		<Instruction code="48 8B C4" comment="mov rax, rsp" />
+		<Instruction code="44 89 48 20" comment="mov [rax+20h], r9d" />
+		<Instruction code="44 89 40 18" comment="mov [rax+18h], r8d" />
+		<Instruction code="48 89 48 08" comment="mov [rax+8h], rcx" />
+		<Instruction code="55 56 57" comment="push rbp, rsi, rdi" />
+		
+		<Hook value="load_stage_patched" setup="SetupLS" />
+	</Patch>
+	
+	<Patch name="StagesParamExt" type="hook" search_start="0x18F1F80" comment="signature 1.22" >
+		<Instruction code="48 89 5C 24 10" comment="mov [rsp+10], rbx" />
+		<Instruction code="48 89 6C 24 18" comment="mov [rsp+18], rbp" />
+		<Instruction code="56 57 41 54 41 56 41 57" comment="push rsi, rdi, r12, r14, r15" />
+		<Instruction code="48 83 EC 30" comment="sub rsp, 30h" />
+		<Instruction code="40 32 FF" comment="xor dil, dil" />
+		<Instruction code="48 8D A9 E0 07 00 00" comment="lea rbp, [rcx+7E0h]" />
+		
+		<Hook value="set_stage_params_patched" setup="SetupSSP" />		
+	</Patch>
+	
+	<!-- IMPORTANT: if the offset (708) changes, the implementation of get_current_stage in game.cpp must be changed too -->
+	<Patch name="LocateTDM" type="notify" search_start="0x18B2D00" comment="signature 1.22" >
+		<Instruction code="40 53" comment="push rbx" />
+		<Instruction code="48 83 EC 20" comment="sub rsp, 20h" />
+		<Instruction code="48 8B 05 XXXXXXXX" comment="mov rcx, XXXXXXXX" />
+		<Instruction code="48 8B 98 08 07 00 00" comment="mov rbx, [rax+708h]" />
+		<Instruction code="48 85 DB" comment="test rbx, rbx" />
+		<Instruction code="74 XX" comment="je XX" />
+		<Instruction code="48 8B 0D XXXXXXXX" comment="mov rcx, XXXXXXXX" />
+		<Instruction code="BA 73 AE 0B 72" comment="mov edx, 720BAE73h" />
+		
+		<Notify inst_index="2" inst_offset="3" value="OnTDMLocated" />
+	</Patch>
+	
+	<!-- IMPORTANT: this patch signature is same as above, but must always be placed below -->
+	<Patch name="PatchGCSBGM" type="hook" search_start="0x18B2D00" comment="signature 1.22" >
+		<Instruction code="40 53" comment="push rbx" />
+		<Instruction code="48 83 EC 20" comment="sub rsp, 20h" />
+		<Instruction code="48 8B 05 XXXXXXXX" comment="mov rcx, XXXXXXXX" />
+		<Instruction code="48 8B 98 08 07 00 00" comment="mov rbx, [rax+708h]" />
+		<Instruction code="48 85 DB" comment="test rbx, rbx" />
+		<Instruction code="74 XX" comment="je XX" />
+		<Instruction code="48 8B 0D XXXXXXXX" comment="mov rcx, XXXXXXXX" />
+		<Instruction code="BA 73 AE 0B 72" comment="mov edx, 720BAE73h" />
+		
+		<Hook value="get_current_stage_bgm_patched" setup="SetupGCSBGM" />
+	</Patch>	
+	
+	
+	<!-- Underwear fix removed in 1.19 because not longer needed -->
+	<!-- Fix for random underwear not working after first battle -->
+	<!-- Note: if the signature breaks, the Write code must also be updated -->
+	<!--<Patch name="FixRandomUnderwear" type="write" search_start="0x18AD9BC" enabled="Random:enable_random_underwear" comment="signature 1.17" >
+		<Instruction code="44 8B 74 24 4C" comment="mov r14d, [rsp+4Ch]; r14d = glasses" />
+		<Instruction code="44 89 74 24 78" comment="mov dword ptr[rsp+78h], r14d; store glasses" />
+		<Instruction code="33 C0" comment="xor eax, eax" />
+		<Instruction code="89 44 24 7C" comment="mov dword ptr[rsp+7Ch], eax; set underwear always to 0" /> -->
+		
+		<!-- Change code to: mov r14, [rsp+4Ch] (r14=glasses&underwar);  mov qword ptr[rsp+78h], r14; (store both glasses&underwear); fill with nop -->
+		<!--<Write value="4C 8B 74 24 4C    4C 89 74 24 78    90 90    90 90 90 90" />
+	
+	</Patch>-->
+	
+	<!-- Fix for random glasses not working after first battle -->
+	<Patch name="FixRandomGlasses" type="hook" search_start="0x18AD6B5" enabled="Random:enable_random_glasses" comment="signature 1.17" >
+		<Instruction code="44 0F B7 C3" comment="movzx r8d, bx" />
+		<Instruction code="48 8B D7" comment="mov rdx, rdi" />
+		<Instruction code="44 0F B6 88 XXXXXXXX" comment="movzx r9d, byte ptr [rax+XXXXh]; r9d = allow random glasses" />
+		<Instruction code="E8 XXXXXXXX" comment="call XXXXXXXX" />
+		<Instruction code="44 0F B7 C3" comment="movzx r8d, bx" />
+		
+		<Hook type="resolve_target" inst_index="3" value="fix_random_glasses" setup="SetupLSD" />
+	</Patch>
+	
+	<Patch name="PatchCLRICtor" type="hook" search_start="0x14886C0" comment="signature 1.22" >
+		<Instruction code="44 88 44 24 18" comment="mov [rsp+0x18], r8b" />
+		<Instruction code="48 89 4C 24 08" comment="mov [rsp+8], rcx" />
+		<Instruction code="55 56 57" comment="push rbp, rsi, rdi" />
+		<Instruction code="48 83 EC 30" comment="sub rsp, 0x30" />
+		<Instruction code="48 C7 44 24 20 FE FF FF FF" comment="mov [rsp+0x20], -2" />
+		<Instruction code="48 89 5C 24 58" comment="mov [rsp+0x58], rbx" />
+		<Instruction code="49 8B F1" comment="mov rsi, r9" />
+		
+		<Hook value="CharacterLoadRequestImpl_ctor_Patched" setup="SetupCLRI" />
+	</Patch>
+	
+	<Patch name="PatchMGDG" type="hook" search_start="0x11DF50A" comment="signature 1.22" >
+		<Instruction code="41 B8 D1 A5 53 11" comment="mod r8d, 1153A5D1h" />
+		<Instruction code="E8 XXXXXXXX" comment="call XXXXXXXX" />
+		<Instruction code="89 45 XX" comment="mov [rbp+XX], eax" />
+		<Instruction code="48 8B 0D XXXXXXXX" comment="mov rcx, XXXXXXXX" />
+		<Instruction code="48 85 C9" comment="test rcx, rcx" />
+		<Instruction code="74 XX" comment="je XX" />
+		<Instruction code="8B D7" comment="mov edx, esi" />
+		<Instruction code="E8 XXXXXXXX" comment="call model::get_default_glasses" />
+		
+		<Hook type="resolve_target" inst_index="7" value="model_get_default_glasses_patched" setup="SetupMGDG" />		
+	</Patch>
+	
+	<!-- Warning: needed variable by dll: the 0x35A8. On signature change, update the dll -->
+	<Patch name="Transform1" type="hook" search_start="0x19D96A0" comment="signature 1.22" >
+		<Instruction code="40 53" comment="push rbx" />
+		<Instruction code="48 83 EC 20" comment="sub rsp, 20h" />
+		<Instruction code="48 8B 81 A8 35 00 00" comment="mov rax, [rcx+35A8h]" />
+		<Instruction code="48 83 C0 02" comment="add rax, 2" />
+		
+		<Hook value="OnCharacterBreakPatched" setup="SetupOCB" />
+	</Patch>
+	
+	<Patch name="Transform2" type="hook" search_start="0x2564F" comment="signature 1.22" >
+		<Instruction code="48 8D 05 XXXXXXXX" comment="lea rax, OnCharacterTransform" />		
+		<Instruction code="44 89 5D F8" comment="mov dword ptr[rbp-8], r11d" />		
+		<Instruction code="0F 11 05 XXXXXXXX" comment="movups XXXXXXXX, xmm0" />		
+		<Instruction code="0F 10 45 F0" comment="movups xmm0, [rbp-10h]" />		
+		<Instruction code="48 89 45 F0" comment="mov qword ptr[rbp-10], rax" />
+		<Instruction code="48 8D 05 XXXXXXXX" comment="lea rax, XXXXXXXX" />		
+		<Instruction code="44 89 5D F8" comment="mov dword ptr[rbp-8], r11d" />		
+		<Instruction code="0F 29 05 XXXXXXXX" comment="movaps XXXXXXXX, xmm0" />		
+		<Instruction code="0F 10 45 F0" comment="movups xmm0, [rbp-10h]" />		
+		<Instruction code="48 89 45 F0" comment="mov qword ptr[rbp-10], rax" />		
+		<Instruction code="44 89 5D F8" comment="mov dword ptr[rbp-8], r11d" />	
+		<Instruction code="0F 11 05 XXXXXXXX" comment="movups XXXXXXXX, xmm0" />		
+		<Instruction code="0F 10 45 F0" comment="movups xmm0, [rbp-10h]" />		
+		<Instruction code="0F 29 05 XXXXXXXX" comment="movaps XXXXXXXX, xmm0" />		
+		<Instruction code="48 83 C4 10" comment="add rsp, 10h" />
+		
+		<Hook inst_index="0" inst_offset="3" type="direct_target" value="OnCharacterTransformPatched" setup="SetupOCT" />
+	</Patch>
+	
+	<!-- Warning: needed variables by dll: 0x35A8, 0x3560. On signature change, update the dll -->
+	<Patch name="Transform3" type="notify" search_start="0x19D96BB" comment="signature 1.22" >
+		<Instruction code="48 83 C0 02" comment="add rax, 2" />
+		<Instruction code="48 89 81 A8 35 00 00" comment="mov [rcx+35A8h], rax" />
+		<Instruction code="0F B6 89 60 35 00 00" comment="movzx ecx, byte ptr [rcx+3560h]" />
+		<Instruction code="E8 XXXXXXXX" comment="call get_player_mao" />
+		
+		<Notify inst_index="3" inst_offset="1" value="OnGetPlayerMAOLocated" />
+	</Patch>
+	
+	<Patch name="Transform4" type="notify" search_start="0x19D605C" comment="signature 1.22" >
+		<Instruction code="48 8B 56 08" comment="mov rdx, [rsi+8]" />
+		<Instruction code="48 8D 4C 24 20" comment="lea rcx, [rsp+20h]" />
+		<Instruction code="E8 XXXXXXXX" comment="call XXXXXXXX" />
+		<Instruction code="0F B6 54 24 20" comment="movzx edx, byte ptr[rsp+20h]" />
+		<Instruction code="48 8D 4D 98" comment="lea rcx, [rbp-68h]" />
+		<Instruction code="E8 XXXXXXXX" comment="call XXXXXXXX" />
+		
+		<Notify inst_index="2" inst_offset="1" value="OnBR1Located" />
+	</Patch>
+	
+	<!-- Note: this patch has smae signature as above -->
+	<Patch name="Transform5" type="notify" search_start="0x19D605C" comment="signature 1.22" >
+		<Instruction code="48 8B 56 08" comment="mov rdx, [rsi+8]" />
+		<Instruction code="48 8D 4C 24 20" comment="lea rcx, [rsp+20h]" />
+		<Instruction code="E8 XXXXXXXX" comment="call XXXXXXXX" />
+		<Instruction code="0F B6 54 24 20" comment="movzx edx, byte ptr[rsp+20h]" />
+		<Instruction code="48 8D 4D 98" comment="lea rcx, [rbp-68h]" />
+		<Instruction code="E8 XXXXXXXX" comment="call XXXXXXXX" />
+		
+		<Notify inst_index="5" inst_offset="1" value="OnBR2Located" />
+	</Patch>
+	
+	<Patch name="Transform6" type="notify" search_start="0x19D6085" comment="signature 1.22" >
+		<Instruction code="48 8B 1D XXXXXXXX" comment="mov rbx, DamagedCharacterEvent_obj" />
+		<Instruction code="48 85 DB 74 16" comment="test rbx, rbx; je 16" />
+		<Instruction code="48 8B 03" comment="mov rax, [rbx]" />
+		<Instruction code="48 8D 55 88" comment="lea rdx, [rbp-78h]" />
+		<Instruction code="48 8B CB" comment="mov rcx, rbx" />
+		<Instruction code="FF 50 08" comment="call virtual @8" />
+		
+		<Notify inst_index="0" inst_offset="3" value="OnDCELocated" />
+	</Patch>
+	
+	<!--<Patch name="LocateOO" type="notify" search_start="0x1078053" comment="signature 1.04a" >
+		<Instruction code="48 8B 05 XXXXXXXX" comment="mov rax, OPO" />
+		<Instruction code="48 8B 49 08" comment="mov rcx, [rcx+8]" />
+		<Instruction code="48 8B 50 08" comment="mov rdx, [rax+8]" />
+		<Instruction code="48 2B 10" comment="sub rdx, [rax]" />
+		<Instruction code="48 C1 FA 02" comment="sar rdx, 2" />
+		<Instruction code="E8 XXXXXXXX" comment="call XXXXXXXX" />
+		<Instruction code="33 C9" comment="xor ecx, ecx" />
+		
+		<Notify inst_index="0" inst_offset="3" value="OnOOLocated" />
+	</Patch>-->	
+	
+	<!--<Patch name="PatchMCC" type="hook" search_start="0x10329F2" comment="signature 1.03b" >
+		<Instruction code="83 7C 24 78 01" comment="cmp dword ptr[rsp+78h], 1" />
+		<Instruction code="8B D3" comment="mov edx, ebx" />
+		<Instruction code="0F B6 44 24 50" comment="movzx eax, byte ptr[rsp+50h]" />
+		<Instruction code="44 8B CB" comment="mov r9d, ebx" />
+		<Instruction code="0F 44 94 24 80 00 00 00" comment="cmovz edx, dword ptr[rsp+80h]" />
+		<Instruction code="44 8B C3" comment="mov r8d, ebx" />
+		<Instruction code="83 7C 24 68 01" comment="cmp dword ptr[rsp+68h], 1" />
+		<Instruction code="8B CB" comment="mov ecx, ebx" />
+		<Instruction code="89 54 24 20" comment="mov [rsp+20h], edx" />
+		<Instruction code="44 0F 44 4C 24 70" comment="cmovz r9d, dword ptr[rsp+70h]" />
+		<Instruction code="83 7C 24 58 01" comment="cmp dword ptr[rsp+58h], 1" />
+		<Instruction code="44 0F 44 44 24 60" comment="cmovz r8d, dword ptr[rsp+60h]" />
+		<Instruction code="83 7C 24 48 01" comment="cmp dword ptr[rsp+48h], 1" />
+		<Instruction code="0F 44 C8" comment="cmovz ecx, eax" />
+		<Instruction code="0F B6 D1"comment="mov edx, cl" />
+		<Instruction code="48 8B 0D XXXXXXXX" comment="mov rcx, XXXXXXXX" />
+		<Instruction code="E8 XXXXXXXX" comment="call XXXXXXXX" />
+		
+		<Hook type="call" inst_index="16" value="model_character_completed_patched"  setup="SetupMCC"/>
+	</Patch>	-->
+
+</EternityPatchFile>

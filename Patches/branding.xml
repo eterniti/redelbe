@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8" ?>
+
+<EternityPatchFile name="Branding" enabled="true" >	
+
+	<Patch name="Branding" type="hook" search_start="0xFC5928" comment="addr 1.03b" >
+		<Instruction code="48 8D 05 XXXXXXXX" comment="lea rax, XXXXXXXX" />
+		<Instruction code="48 89 44 24 20" comment="mov [rsp+20], rax" />
+		<Instruction code="41 B8 00 08 00 00" comment="mov r8d, 800h" />
+		<Instruction code="48 8D 94 24 XXXXXXXX" comment="lea rdx, [rsp+XXXXXXXX]" />
+		<Instruction code="48 8D 4C 24 XX" comment="lea rcx, [rsp+XX]" />
+		<Instruction code="E8 XXXXXXXX" comment="call XXXXXXXX" />
+		<Instruction code="48 C7 43 18 07 00 00 00" comment="mov qword ptr [rbx+18h], 7" />
+		<Instruction code="48 89 7B 10" comment="mov [rbx+10h], rdi" />
+		<Instruction code="66 89 3B" comment="mov [rbx], di" />
+		<Instruction code="4C 63 C0" comment="movsxd r8, eax" />
+		<Instruction code="48 8D 94 24 XXXXXXXX" comment="lea rdx, [rsp+XXXXXXXX]" />
+		<Instruction code="48 8B CB" comment="mov rcx, rbx" />
+		<Instruction code="E8 XXXXXXXX" comment="call XXXXXXXX" />
+		
+		<Hook type="call" inst_index="12" value="branding" setup="SetupBranding" />
+	</Patch>
+	
+	
+
+</EternityPatchFile>

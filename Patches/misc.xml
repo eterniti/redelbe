@@ -1,0 +1,99 @@
+<?xml version="1.0" encoding="utf-8" ?>
+
+<EternityPatchFile name="Misc" >
+
+	<Patch name="SurvivalStagePatch" type="notify" search_start="0x18501F1" enabled="IsSurvivalPatchNeeded()" comment="signature 1.22" >
+		<Instruction code="C7 45 04 B2 11 A5 17" comment="mov dword ptr [rbp+4], 17A511B2h" />		
+		
+		<Notify value="OnSurvivalStageLocated" inst_index="0" inst_offset="3" />
+	</Patch>
+	
+	<Patch name="RandomMusicPatch" type="hook" search_start="0x18C384A" enabled="Random:enable_random_music" comment="signature 1.22" >
+		<Instruction code="BA 7B 74 ED AE" comment="mov edx, 0AEED747Bh" />
+		<Instruction code="E8 XXXXXXXX" comment="call XXXXXXXX" />
+		<Instruction code="85 C0" comment="test eax, eax" />
+		<Instruction code="78 0B" comment="js +0B" />
+		<Instruction code="8B CB" comment="mov ecx, ebx" />
+		<Instruction code="E8 XXXXXXXX" comment="call XXXXXXXX" />
+		
+		<Hook type="call" inst_index="5" value="validate_character_track_patched" setup="SetupRandomMusic" />
+	</Patch>
+	
+	<Patch name="RandomMusicPatch2" type="hook" search_start="0x18C380C" enabled="Random:enable_random_music" comment="signature 1.22" >
+		<Instruction code="83 F8 64" comment="cmp eax, 64h" />
+		<Instruction code="0F 84 XXXXXXXX" comment="jz XXXXXXXX" />
+		<Instruction code="8B D8" comment="mov ebx, eax" />
+		<Instruction code="E8 XXXXXXXX" comment="call get_character_bgm_table" />
+		
+		<Hook type="call" inst_index="3" value="get_character_bgm_table_patched" setup="SetupGCBT" />
+	</Patch>
+	
+	<Patch name="RandomMusicPatch3" type="nop" search_start="0x18C3859" enabled="Random:enable_random_music" comment="signature 1.22" >
+		<Instruction code="48 83 C1 68" comment="add rcx, 68h" />
+		<Instruction code="44 8B C3" comment="mov r8d, ebx" />
+		<Instruction code="BA 7B 74 ED AE" comment="mov edx, 0AEED747Bh" />
+		<Instruction code="E8 XXXXXXXX" comment="call XXXXXXXX" />
+		<Instruction code="85 C0" comment="test eax, eax" />
+		<Instruction code="78 0B" comment="js +0xB" />
+		
+		<Nop inst_index="5" size="2" />
+	</Patch>
+	
+	<Patch name="DisableSplashScreen" type="write" search_start="0x16D0051" enabled="Misc:disable_splash" >
+		<Instruction code="8B 57 74" comment="mov edx, [rdi+74h]" />
+		<Instruction code="48 8B 4F 68" comment="mov rcx, [rdi+68h]" />
+		<Instruction code="FF 15 XXXXXXXX" comment="call ShowWindow" />
+		<Instruction code="48 8D 9F F0 00 00 00" comment="lea rbx, [rdi+F0h]" />
+		
+		<!-- xor rdx, rdx -->
+		<Write value="48 31 D2" />
+	</Patch>
+	
+	<!-- Added in 3.1 -->
+	<Patch name="HookRelatedFace" type="hook" search_start="0x104E7AD" comment="signature 1.22" >
+		<Instruction code="E8 XXXXXXXX" comment="call get_related_face" />
+		<Instruction code="45 33 C9" comment="xor r9d, r9d" />
+		<Instruction code="44 8B C0" comment="mov r8d, eax" />
+		<Instruction code="8B D7" comment="mov edx, edi" />
+		<Instruction code="48 8B CB" comment="mov rcx, rbx" />
+		<Instruction code="E8 XXXXXXXX" comment="call get_related_hair" />
+		<Instruction code="44 8B F8" comment="mov r15d, eax" />
+		<Instruction code="48 8D 4B XX" comment="lea rcx, [rbx+XX]" />
+		<Instruction code="44 8B C7" comment="mov r8d, edi" />
+		<Instruction code="BA 3D 92 63 B7" comment="mov edx, 0B763923Dh" />
+		
+		<Hook type="resolve_target" inst_index="0" value="get_related_face_patched" setup="SetupDefaults" />
+	</Patch>
+	
+	<!-- This patch has same signature as above one -->
+	<Patch name="HookRelatedHair" type="hook" search_start="0x104E7AD" comment="signature 1.22" >
+		<Instruction code="E8 XXXXXXXX" comment="call get_related_face" />
+		<Instruction code="45 33 C9" comment="xor r9d, r9d" />
+		<Instruction code="44 8B C0" comment="mov r8d, eax" />
+		<Instruction code="8B D7" comment="mov edx, edi" />
+		<Instruction code="48 8B CB" comment="mov rcx, rbx" />
+		<Instruction code="E8 XXXXXXXX" comment="call get_related_hair" />
+		<Instruction code="44 8B F8" comment="mov r15d, eax" />
+		<Instruction code="48 8D 4B XX" comment="lea rcx, [rbx+XX]" />
+		<Instruction code="44 8B C7" comment="mov r8d, edi" />
+		<Instruction code="BA 3D 92 63 B7" comment="mov edx, 0B763923Dh" />
+		
+		<Hook type="resolve_target" inst_index="5" value="get_related_hair_patched" setup="SetupGRH" />
+	</Patch>
+	
+	<Patch name="HookLoadCostumes" type="hook" search_start="0xF0D230" comment="signature 1.22" >
+		<Instruction code="48 8B C4" comment="mov rax, rsp" />
+		<Instruction code="41 56" comment="push r14" />
+		<Instruction code="48 83 EC 60" comment="sub rsp, 30h" />
+		<Instruction code="48 C7 40 B8 FE FF FF FF" comment="mov [rax-48], -2" />		
+		<Instruction code="48 89 58 08" comment="mov [rax+8], rbx" />
+		<Instruction code="48 89 68 10" comment="mov [rax+10], rbp" />
+		<Instruction code="48 89 70 18" comment="mov [rax+18], rsi" />
+		<Instruction code="48 89 78 20" comment="mov [rax+20], rdi" />
+		<Instruction code="4C 8B F1" comment="mov r14, rcx" />
+		<Instruction code="48 8D 48 E0" comment="lea rcx, [rax-20h]" />
+		
+		<Hook value="load_costumes_patched" setup="SetupLC" />
+	</Patch>
+
+</EternityPatchFile>

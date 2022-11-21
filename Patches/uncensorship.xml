@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8" ?>
+
+<EternityPatchFile name="Uncensorship" enabled="Uncensorship:uncensor_loli_blow" >	
+
+	<!-- This patch was originally found by someone else, so kudos to whoever it was.
+	     I've corrected some incorrection the original had (it had a small probability of not working) -->
+	
+	<Patch name="UncensorLoliBlow" type="write" search_start="0x1905616" comment="addr 1.06a" >
+		<Instruction code="48 85 C0" comment="test rax, rax" />
+		<Instruction code="74 XX" comment="je XX" />
+		<Instruction code="66 83 38 6D" comment="cmp word ptr [rax], 6Dh" />
+		<Instruction code="0F 92 C1" comment="setb cl" />
+		<Instruction code="84 C9" comment="test cl, cl" />
+		<Instruction code="74 XX" comment="je XX" />
+		<Instruction code="0F B6 8B 60 35 00 00" comment="movzx ecx, byte ptr [rbx+3560h]" />
+		<Instruction code="80 F1 01" comment="xor cl, 1" />
+		<Instruction code="E8 XXXXXXXX" comment="call XXXXXXXX" />
+		<Instruction code="40 80 CF 01" comment="or dil, 1" />
+		<Instruction code="40 84 FF" comment="test dil, dil" />
+		<Instruction code="74 XX" comment="jz XX" />
+		<Instruction code="48 8B 3D XXXXXXXX" comment="mov rdi, XXXXXXXX" />
+		
+		<!--  test rax, rax -> xor edi, edi; je -> jmp -->
+		<Write value="31 FF 90  EB"  />
+	</Patch>	
+		 
+	<!-- Version pre-Kula -->
+	<!--
+	<Patch name="UncensorLoliBlow" type="write" search_start="0x1824B90" comment="addr 1.03a" >
+		<Instruction code="0F B6 40 14" comment="movzx eax, byte ptr [rax+14h]" />
+		<Instruction code="3C 19" comment="cmp al, 19h" />
+		<Instruction code="77 XX" comment="ja +XX" />
+		<Instruction code="0F B6 C8" comment="movzx ecx, al" />
+		<Instruction code="B8 00 00 50 02" comment="mov eax, 2500000h ; 2500000 = 1 << 20 | 1 << 22 | 1 << 25 = Marie | Honoka | Nico" />
+		<Instruction code="0F A3 C8" comment="bt eax, ecx" />
+		<Instruction code="73 XX" comment="jnb +XX" />
+		<Instruction code="0F B6 9B XXXXXXXX" comment="movzx ebx, byte ptr [rbx+XXXXh]" />
+		
+		<Write inst_index="6" value="EB"  />
+	</Patch> -->
+	
+	
+
+</EternityPatchFile>

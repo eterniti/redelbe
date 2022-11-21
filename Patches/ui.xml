@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="utf-8" ?>
+
+<EternityPatchFile name="UI" >
+
+	<!-- Note: this patch is identical to one in layer2.xml, but they are compatible -->
+	<Patch name="LocateLO2" type="notify" search_start="0x114F1A3" enabled="UI:enable_hide_battle_hud" comment="signature 1.05" >
+		<Instruction code="89 44 24 20" comment="mov [rsp+20h], eax" />
+		<Instruction code="44 8B CE" comment="mov r9d, esi" />
+		<Instruction code="45 8B C6" comment="mov r8d, r14d" />
+		<Instruction code="48 8B 0D XXXXXXXX" comment="mov rcx, XXXXXXXX" />
+		
+		<Notify value="OnLOLocated2" inst_index="3" inst_offset="3" />
+	</Patch>
+	
+	<Patch name="PatchLSL" type="hook" search_start="0x1224C05" enabled="UI:enable_hide_battle_hud" comment="signature 1.22" >
+		<Instruction code="0F 85 XXXXXXXX" comment="jne XXXXXXXX" />
+		<Instruction code="BA 0E D9 AF 93" comment="mov edx, 93AFD90Eh" />
+		<Instruction code="48 8B 0D XXXXXXXX" comment="mov rcx, XXXXXXXX" />
+		<Instruction code="E8 XXXXXXXX" comment="call layout_show_layout" />
+		
+		<Hook type="resolve_target" inst_index="3" value="layout_show_layout_patched" setup="SetupLSL" />
+	</Patch>
+	
+	<!-- Note: there are two matches for this signature, but both will end in same thing -->
+	<Patch name="PatchLHL" type="hook" search_start="0x121A6A2" enabled="UI:enable_hide_battle_hud" comment="signature 1.22" >
+		<Instruction code="BA DF D7 52 E4" comment="mov edx, E452D7DFh" />
+		<Instruction code="48 8B 0D XXXXXXXX" comment="mov rcx, XXXXXXXX" />
+		<Instruction code="E8 XXXXXXXX" comment="call layout_show_layout" />
+		<Instruction code="41 C6 85 XXXXXXXX 00" comment="cmp byte ptr[r13+XXXXXXXX], 0" />
+		
+		<Hook type="resolve_target" inst_index="2" value="layout_hide_layout_patched" setup="SetupLHL" />
+	</Patch>
+	
+	<!--<Patch name="PatchSUL" type="hook" search_start="0x11B4390" enabled="UI:enable_hide_battle_hud" comment="signature 1.22" >
+		<Instruction code="40 53 56 57" comment="push rbx, rsi, rdi" />
+		<Instruction code="48 83 EC 70" comment="sub rsp, 70h" />
+		<Instruction code="48 C7 44 24 38 FE FF FF FF" comment="mov qword ptr[rsp+38h], -2" />
+		<Instruction code="48 8B 05 XXXXXXXX" comment="mov rax, XXXXXXXX" />
+		<Instruction code="48 33 C4" comment="xor rax, rsp" />
+		<Instruction code="48 89 44 24 68" comment="mov [rsp+68h], rax" />
+		<Instruction code="49 8B F0" comment="mov rsi, r8" />
+		
+		<Hook value="scene_use_layout_patched" setup="SetupSUL" />		
+	</Patch>
+	
+	<Patch name="PatchSUML" type="hook" search_start="0x11B4610" enabled="UI:enable_hide_battle_hud" comment="signature 1.22" >
+		<Instruction code="40 55 56 57" comment="push rbp, rsi, rdi" />
+		<Instruction code="48 81 EC 80 00 00 00" comment="sub rsp, 80h" />
+		<Instruction code="48 C7 44 24 40 FE FF FF FF" comment="mov qword ptr[rsp+40h], -2" />
+		<Instruction code="48 89 9C 24 B0 00 00 00" comment="mov [rbp+B0], rbx" />
+		<Instruction code="48 8B 05 XXXXXXXX" comment="mov rax, XXXXXXXX" />
+		<Instruction code="48 33 C4" comment="xor rax, rsp" />
+		<Instruction code="48 89 44 24 70" comment="mov [rsp+70h], rax" />
+		<Instruction code="49 8B F1" comment="mov rsi, r9" />
+		
+		<Hook value="scene_use_multiple_layout_patched" setup="SetupSUML" />		
+	</Patch>-->
+
+</EternityPatchFile>

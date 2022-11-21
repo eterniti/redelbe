@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8" ?>
+
+<!-- Some dirty workarounds for some crashes in some layer 2 hair mods (or costume with hair included) -->
+
+<EternityPatchFile name="Workarounds" comment="LAME workarounds" >	
+
+	<Patch name="Workaround115_1" type="nop" search_start="0x11D6FCF" comment="addr 1.15" >
+		<Instruction code="FF C3" comment="inc ebx" />
+		<Instruction code="3B DE" comment="cmp ebx, esi" />
+		<Instruction code="73 XX" comment="jnb +XX" />
+		<Instruction code="E9 XXXXXXXX" comment="jmp -XXXXXXXX" />
+		<Instruction code="48 8D 0D XXXXXXXX" comment="mov rcx, 'invalid vector<T> subscript'" />
+		<Instruction code="E8 XXXXXXXX CC" comment="call exception" />
+		<Instruction code="4C 8D 9C 24 XXXXXXXX" comment="lea r11, [rsp+XXXXXXXX]" />
+		
+		<Nop inst_index="5" size="6" />
+	</Patch>
+	
+	<Patch name="Workaround115_2" type="nop" search_start="0x11D767C" comment="addr 1.16" >
+		<Instruction code="FF C7" comment="inc edi" />
+		<Instruction code="3B FE" comment="cmp edi, esi" />
+		<Instruction code="73 XX" comment="jnb +XX" />
+		<Instruction code="E9 XXXXXXXX" comment="jmp -XXXXXXXX" />
+		<Instruction code="48 8D 0D XXXXXXXX" comment="mov rcx, 'invalid vector<T> subscript'" />
+		<Instruction code="E8 XXXXXXXX CC" comment="call exception" />
+		<Instruction code="48 8D 0D XXXXXXXX" comment="mov rcx, 'invalid vector<T> subscript'" />
+		<Instruction code="E8 XXXXXXXX CC" comment="call exception" />
+		
+		<Nop inst_index="7" size="6" />
+	</Patch>
+	
+	<Patch name="Workaround115_3" type="nop" search_start="0x11D6468" comment="addr 1.15" >
+		<Instruction code="41 FE C5" comment="inc r13b" />
+		<Instruction code="41 80 FD 03" comment="cmp r13b, 3" />
+		<Instruction code="73 XX" comment="jnb +XX" />
+		<Instruction code="E9 XXXXXXXX" comment="jmp -XXXXXXXX" />
+		<Instruction code="48 8D 0D XXXXXXXX" comment="mov rcx, 'invalid vector<T> subscript'" />
+		<Instruction code="E8 XXXXXXXX CC" comment="call exception" />
+		<Instruction code="48 8D 0D XXXXXXXX" comment="mov rcx, 'invalid vector<T> subscript'" />
+		<Instruction code="E8 XXXXXXXX CC" comment="call exception" />
+		
+		<Nop inst_index="5" size="19" />
+	</Patch>
+	
+
+</EternityPatchFile>
